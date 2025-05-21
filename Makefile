@@ -1,5 +1,5 @@
-CORE_PATH := $(abspath ../../cores/esp8266)
-LIBRARIES_PATH := $(abspath ../../libraries)
+CORE_PATH := $(abspath cores/esp8266)
+LIBRARIES_PATH := $(abspath libraries)
 common = common
 HOST_COMMON_ABSPATH := $(abspath $(common))
 FORCE32 ?= 1
@@ -103,7 +103,7 @@ CORE_CPP_FILES := \
 		FS.cpp \
 		spiffs_api.cpp \
 		MD5Builder.cpp \
-		../../libraries/LittleFS/src/LittleFS.cpp \
+		libraries/LittleFS/src/LittleFS.cpp \
 		core_esp8266_noniso.cpp \
 		spiffs/spiffs_cache.cpp \
 		spiffs/spiffs_check.cpp \
@@ -140,8 +140,8 @@ CORE_CPP_FILES := \
 
 CORE_C_FILES := \
 	$(addprefix $(abspath $(CORE_PATH))/,\
-		../../libraries/LittleFS/src/lfs.c \
-		../../libraries/LittleFS/src/lfs_util.c \
+		libraries/LittleFS/src/lfs.c \
+		libraries/LittleFS/src/lfs_util.c \
 	)
 
 MOCK_CPP_FILES_COMMON := \
@@ -188,10 +188,10 @@ INC_PATHS += \
 
 INC_PATHS += \
 	$(addprefix -I,\
-		$(shell echo ../../libraries/*/src) \
-		$(shell echo ../../libraries/*) \
-		../../tools/sdk/include \
-		../../tools/sdk/lwip2/include \
+		$(shell echo libraries/*/src) \
+		$(shell echo libraries/*) \
+		tools/sdk/include \
+		tools/sdk/lwip2/include \
 	)
 
 TEST_ARGS ?=
@@ -335,7 +335,7 @@ ARDUINO_LIBS := \
 		LwipIntfCB.cpp \
 		debug.cpp \
 	) \
-	$(addprefix $(abspath ../../libraries/ESP8266WiFi/src)/,\
+	$(addprefix $(abspath libraries/ESP8266WiFi/src)/,\
 		ESP8266WiFi.cpp \
 		ESP8266WiFiAP.cpp \
 		ESP8266WiFiGeneric.cpp \
@@ -352,7 +352,7 @@ ARDUINO_LIBS := \
 	)
 
 OPT_ARDUINO_LIBS ?= \
-	$(addprefix $(abspath ../../libraries)/,\
+	$(addprefix $(abspath libraries)/,\
 		$(addprefix ESP8266WebServer/src/,\
 			detail/mimetable.cpp \
 		) \
@@ -391,14 +391,14 @@ CPP_SOURCES_CORE_EMU = \
 	$(OPT_ARDUINO_LIBS) \
 	$(ARDUINO_LIBS) \
 
-LIBSSLFILE = ../../tools/sdk/ssl/bearssl/build$(N32)/libbearssl.a
+LIBSSLFILE = tools/sdk/ssl/bearssl/build$(N32)/libbearssl.a
 ifeq (,$(wildcard $(LIBSSLFILE)))
 LIBSSL =
 else
 LIBSSL = $(LIBSSLFILE)
 endif
 ssl:							# download source and build BearSSL
-	cd ../../tools/sdk/ssl && $(MAKE) native$(N32)
+	cd tools/sdk/ssl && $(MAKE) native$(N32)
 
 ULIBPATHS = $(shell echo $(ULIBDIRS) | sed 's,:, ,g')
 USERLIBDIRS = $(shell test -z "$(ULIBPATHS)" || for d in $(ULIBPATHS); do for dd in $$d $$d/utility $$d/src $$d/src/utility; do test -d $$dd && echo $$dd; done; done)
@@ -447,8 +447,8 @@ $(BINDIR)/$(abspath $(INO)).cpp: $(INO)
 
 .PHONY: list
 list:							# show core example list
-	@for dir in ../../libraries/*/examples/* \
-	            ../../libraries/*/examples/*/*; do \
+	@for dir in libraries/*/examples/* \
+	            libraries/*/examples/*/*; do \
 		test -d $$dir || continue; \
 		examplename=$${dir##*/}; \
 		test -f $${dir}/$${examplename}.ino || continue; \
@@ -460,7 +460,7 @@ list:							# show core example list
 
 .PHONY: help
 help:
-	@cat README.txt
+	@cat help.txt
 	@echo ""
 	@echo "Make rules:"
 	@echo ""
